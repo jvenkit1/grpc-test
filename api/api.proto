@@ -1,0 +1,16 @@
+syntax = "proto3";
+package api;
+
+message Date{
+  string date = 28;
+}
+
+service Greet{
+  rpc sayDate(Date) returns (Date) {}
+}
+
+/*
+We have exposed a service called Greet, that provides a function called sayDate
+
+sayDate returns a Date object.
+ */
