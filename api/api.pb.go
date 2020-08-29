@@ -7,7 +7,11 @@
 package api
 
 import (
+	context "context"
 	proto "github.com/golang/protobuf/proto"
+	grpc "google.golang.org/grpc"
+	codes "google.golang.org/grpc/codes"
+	status "google.golang.org/grpc/status"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -30,7 +34,7 @@ type Date struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Date string `protobuf:"bytes,28,opt,name=date,proto3" json:"date,omitempty"`
+	CurrDate string `protobuf:"bytes,28,opt,name=CurrDate,proto3" json:"CurrDate,omitempty"`
 }
 
 func (x *Date) Reset() {
@@ -65,9 +69,9 @@ func (*Date) Descriptor() ([]byte, []int) {
 	return file_api_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *Date) GetDate() string {
+func (x *Date) GetCurrDate() string {
 	if x != nil {
-		return x.Date
+		return x.CurrDate
 	}
 	return ""
 }
@@ -76,11 +80,12 @@ var File_api_proto protoreflect.FileDescriptor
 
 var file_api_proto_rawDesc = []byte{
 	0x0a, 0x09, 0x61, 0x70, 0x69, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x12, 0x03, 0x61, 0x70, 0x69,
-	0x22, 0x1a, 0x0a, 0x04, 0x44, 0x61, 0x74, 0x65, 0x12, 0x12, 0x0a, 0x04, 0x64, 0x61, 0x74, 0x65,
-	0x18, 0x1c, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x64, 0x61, 0x74, 0x65, 0x32, 0x2a, 0x0a, 0x05,
-	0x47, 0x72, 0x65, 0x65, 0x74, 0x12, 0x21, 0x0a, 0x07, 0x73, 0x61, 0x79, 0x44, 0x61, 0x74, 0x65,
-	0x12, 0x09, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x44, 0x61, 0x74, 0x65, 0x1a, 0x09, 0x2e, 0x61, 0x70,
-	0x69, 0x2e, 0x44, 0x61, 0x74, 0x65, 0x22, 0x00, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x22, 0x22, 0x0a, 0x04, 0x44, 0x61, 0x74, 0x65, 0x12, 0x1a, 0x0a, 0x08, 0x43, 0x75, 0x72, 0x72,
+	0x44, 0x61, 0x74, 0x65, 0x18, 0x1c, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x43, 0x75, 0x72, 0x72,
+	0x44, 0x61, 0x74, 0x65, 0x32, 0x2a, 0x0a, 0x05, 0x47, 0x72, 0x65, 0x65, 0x74, 0x12, 0x21, 0x0a,
+	0x07, 0x53, 0x61, 0x79, 0x44, 0x61, 0x74, 0x65, 0x12, 0x09, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x44,
+	0x61, 0x74, 0x65, 0x1a, 0x09, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x44, 0x61, 0x74, 0x65, 0x22, 0x00,
+	0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -100,8 +105,8 @@ var file_api_proto_goTypes = []interface{}{
 	(*Date)(nil), // 0: api.Date
 }
 var file_api_proto_depIdxs = []int32{
-	0, // 0: api.Greet.sayDate:input_type -> api.Date
-	0, // 1: api.Greet.sayDate:output_type -> api.Date
+	0, // 0: api.Greet.SayDate:input_type -> api.Date
+	0, // 1: api.Greet.SayDate:output_type -> api.Date
 	1, // [1:2] is the sub-list for method output_type
 	0, // [0:1] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
@@ -146,4 +151,84 @@ func file_api_proto_init() {
 	file_api_proto_rawDesc = nil
 	file_api_proto_goTypes = nil
 	file_api_proto_depIdxs = nil
+}
+
+// Reference imports to suppress errors if they are not otherwise used.
+var _ context.Context
+var _ grpc.ClientConnInterface
+
+// This is a compile-time assertion to ensure that this generated file
+// is compatible with the grpc package it is being compiled against.
+const _ = grpc.SupportPackageIsVersion6
+
+// GreetClient is the client API for Greet service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
+type GreetClient interface {
+	SayDate(ctx context.Context, in *Date, opts ...grpc.CallOption) (*Date, error)
+}
+
+type greetClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewGreetClient(cc grpc.ClientConnInterface) GreetClient {
+	return &greetClient{cc}
+}
+
+func (c *greetClient) SayDate(ctx context.Context, in *Date, opts ...grpc.CallOption) (*Date, error) {
+	out := new(Date)
+	err := c.cc.Invoke(ctx, "/api.Greet/SayDate", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// GreetServer is the server API for Greet service.
+type GreetServer interface {
+	SayDate(context.Context, *Date) (*Date, error)
+}
+
+// UnimplementedGreetServer can be embedded to have forward compatible implementations.
+type UnimplementedGreetServer struct {
+}
+
+func (*UnimplementedGreetServer) SayDate(context.Context, *Date) (*Date, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SayDate not implemented")
+}
+
+func RegisterGreetServer(s *grpc.Server, srv GreetServer) {
+	s.RegisterService(&_Greet_serviceDesc, srv)
+}
+
+func _Greet_SayDate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Date)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GreetServer).SayDate(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.Greet/SayDate",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GreetServer).SayDate(ctx, req.(*Date))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+var _Greet_serviceDesc = grpc.ServiceDesc{
+	ServiceName: "api.Greet",
+	HandlerType: (*GreetServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "SayDate",
+			Handler:    _Greet_SayDate_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "api.proto",
 }

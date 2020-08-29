@@ -2,11 +2,11 @@ syntax = "proto3";
 package api;
 
 message Date{
-  string date = 28;
+  string CurrDate = 28;
 }
 
 service Greet{
-  rpc sayDate(Date) returns (Date) {}
+  rpc SayDate(Date) returns (Date) {}
 }
 
 /*
